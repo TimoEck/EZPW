@@ -1,2 +1,2 @@
 # EZPW
-EZPW - Lightweigth Password Generator created with Python
+Lightweight Password Generator created with Python
