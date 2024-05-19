@@ -6,86 +6,60 @@ import numpy as np
 
 class PasswordGenerator:
 
-    
-    # def __init__(self) -> None:
-    #     self.strings = string.ascii_letters
-    #     self.lowerChar = string.ascii_lowercase
-    #     self.upperChar = string.ascii_uppercase
-    #     self.symbols = string.punctuation
+    #Initialize length and character-set
+    def __init__(self, length = 8, character_set = "") -> None:
+        self.length = length
+        self.character_set = character_set
 
-    def set_Options():
+    #Input set Option which character-set will be used
+    def set_Options(self):
        
-        Auswahl = input("""
+        selection = input("""
 ╔══════════════════════════════════════════════════╗
-║ Treffen eine Auswahl:                            ║
+║ Choose Security-Level (Default is [B]):          ║
 ║                                                  ║
-║ [A] Kleinbuchstaben                              ║
-║ [B] Klein- & Großbuchstaben                      ║
-║ [C] Klein- & Großbuchstaben mit Zahlen           ║
+║ [A] Lowercases                                   ║
+║ [B] Lower- & Uppercase                           ║
+║ [C] Lower- & Uppercase with digits               ║
 ║ [D] Top-Secret                                   ║
 ║                                                  ║
 ║                                 made by Timo Eck ║
 ╚══════════════════════════════════════════════════╝
 """).upper()
         
-        match Auswahl:
-            case "A":
-                charList = []
-                optionList = string.ascii_lowercase
-                for item in optionList:
-                    charList.append(item)
-                random.shuffle(charList)
-                return charList 
-            case "B":
-                option = [string.ascii_lowercase , string.ascii_uppercase]
-                charList = []
-                optionList = string.ascii_lowercase +  string.ascii_uppercase
-                for item in optionList:
-                    charList.append(item)
-                random.shuffle(charList)
-                return charList 
-             
-            case "C":
-                charList = []
-                optionList = string.ascii_lowercase + string.ascii_uppercase + string.digits
-                for item in optionList:
-                    charList.append(item)
-                random.shuffle(charList)    
-                return charList            
-            case "D":
-                charList = []
-                optionList = string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation
-                for item in optionList:
-                    charList.append(item)
-                random.shuffle(charList)
-                return charList 
-            case _:
-                print("Bitte treffe eine Auswahl.")
+        
+        if selection == "" or selection == "B":
+                self.character_set = string.ascii_lowercase
+        elif selection == "B":
+                self.character_set = string.ascii_lowercase +  string.ascii_uppercase
+        elif selection == "C":
+                self.character_set = string.ascii_lowercase + string.ascii_uppercase + string.digits     
+        elif selection == "D":
+                self.character_set = string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation
+        else:
+            print("Please make a valid selection.")
+            return self.set_Options()
 
-
-    def setLength(charList):
-        Auswahl = int(input("""
-╔══════════════════════════════════════╗
-║ Bestimme die Länge deines Passworts: ║
-╚══════════════════════════════════════╝
-"""))
-    
+    # Input set length how many characters will be used
+    def set_Length(self):
         try:
-            np.array(charList)
-            pwList = charList[:Auswahl]
-            return pwList
-        except TypeError as e:
-            print(f"Es sind nur Ganzzahlen erlaubt. {e}")
+            self.length = int(input("Password length:"))
+        except ValueError:
+            print("Enter a valid Number.")
+            self.set_Length()
+    
+    #Generate password with random selection from character-set for selected length 
+    def generatePassword(self):
+        if not self.character_set:
+            print("Character set is empty. Please set the options.")
+            return None
+        password = "".join(random.choice(self.character_set) for _ in range(self.length))
+        return password
 
-    def createPassword(pwList):
-        s = ""
-        result = s.join(pwList)
-        return result
-
-PwGen = PasswordGenerator
+PwGen = PasswordGenerator()
 option = PwGen.set_Options()
-length = PwGen.setLength(option)
-Password = PwGen.createPassword(length)
-print(f"Passwort: {Password}")
+length = PwGen.set_Length()
+Password = PwGen.generatePassword()
+print(f"Generated Password: {Password}")
 
 
